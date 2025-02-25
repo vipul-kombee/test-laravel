@@ -10,8 +10,6 @@ $(document).ready(function () {
                 type: "GET",
                 data: { state_id: stateID },
                 success: function (data) {    
-                    console.log(data);
-
                     $.each(data.data, function (id, citydata) {
                         $('#city').append('<option value="' + citydata.id + '">' + citydata.name + '</option>');
                     });
@@ -31,8 +29,9 @@ $(document).ready(function () {
             dataType: 'json',
             delay: 250,
             processResults: function(data) {
+                var roles = data.data.data;
                 return {
-                    results: $.map(data.roles, function(item) {
+                    results: $.map(roles, function(item) {
                         return { id: item.id, text: item.name };
                     })
                 };

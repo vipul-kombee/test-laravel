@@ -56,4 +56,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class, 'role_user');
     }
+
+    public function scopeExcludeLoggedUser($query)
+    {
+        return $query->where('id', '!=', auth()->id());
+    }
 }

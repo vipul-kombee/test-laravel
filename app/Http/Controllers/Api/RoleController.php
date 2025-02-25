@@ -5,22 +5,21 @@ namespace App\Http\Controllers\Api;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RoleRequest;
+use App\Traits\ApiResponseTrait;
 
 class RoleController extends Controller
 {
+    use ApiResponseTrait;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         //
-        $roles = Role::select(['id', 'name'])->get()->toArray();
-        // dd($roles);
-        return response()->json([
-            'status' => 'success',
-            'roles' => $roles
-        ], 200);
-
+        $roles = Role::select(['id', 'name'])->paginate(10)->toArray();
+        return $this->successResponse($roles, 'success', 200);
     }
 
     /**
@@ -34,9 +33,12 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(RoleRequest $request)
     {
         //
+        $data = $request->validated();
+        $role = Role::create($data);
+        return $this->successResponse($role, 'success', 201);
     }
 
     /**
@@ -45,6 +47,7 @@ class RoleController extends Controller
     public function show(Role $role)
     {
         //
+        return response()->json($role->load('users'));
     }
 
     /**
@@ -58,9 +61,12 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Role $role)
+    public function update(RoleRequest $request, Role $role)
     {
         //
+        $data = $request->validated();
+        $role->update($data);
+        return $this->successResponse($role, 'success', 201);
     }
 
     /**
@@ -69,5 +75,19 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         //
+        $role->delete();
+        return $this->successResponse(['message' => 'Role deleted'], 'success');
+    }
+
+    public function attachUser(Request $request, Role $role)
+    {
+        $role->users()->attach($request->user_id);
+        return $this->successResponse(['message' => 'User attached to role'], 'success');
+    }
+
+    public function detachUser(Request $request, Role $role)
+    {
+        $role->users()->detach($request->user_id);
+        return $this->successResponse(['message' => 'User detached from role'], 'success');
     }
 }

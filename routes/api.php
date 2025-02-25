@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\ExportController;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
+use App\Http\Controllers\Api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,4 +42,5 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/export/csv', [ExportController::class, 'exportCSV']);
     Route::get('/export/excel', [ExportController::class, 'exportExcel']);
     Route::get('/export/pdf', [ExportController::class, 'exportPDF']);
+    Route::resource('/users', UserController::class);
 });
