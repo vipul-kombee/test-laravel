@@ -67,6 +67,10 @@ jobs:
     - name: Seed Database
       run: php artisan db:seed --force
 
+    - name: Check Database
+      run: |
+        mysql -h 127.0.0.1 -u laravel -ppassword laravel -e "SHOW TABLES;"
+
     - name: Clear Configuration Cache
       run: php artisan config:clear
 
