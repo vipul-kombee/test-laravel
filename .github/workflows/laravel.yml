@@ -81,10 +81,11 @@ jobs:
       run: php artisan queue:restart
       continue-on-error: true
 
-    - name: Install Railway CLI (New Version)
+    - name: Install Railway CLI
       run: npm install -g @railway/cli
 
+    - name: Authenticate Railway
+      run: railway login --token ${{ secrets.RAILWAY_TOKEN }}
+
     - name: Deploy to Railway
-      env:
-        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
       run: railway deploy
