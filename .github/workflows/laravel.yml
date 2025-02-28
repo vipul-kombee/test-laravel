@@ -24,11 +24,15 @@ jobs:
         RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
       run: echo "Using Railway Token"
 
-    - name: Ensure Database Exists in Railway
+    - name: Ensure MySQL Database Exists in Railway
       env:
         RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
       run: |
-        railway service list | grep "mysql" || railway service new --name laravel-db --template mysql
+        if ! railway service list | grep -i "mysql"; then
+          railway up --service mysql
+        else
+          echo "MySQL service already exists"
+        fi
 
     - name: Fetch Database Credentials
       env:
