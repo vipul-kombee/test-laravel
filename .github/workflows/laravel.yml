@@ -23,7 +23,7 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          echo "$RAILWAY_TOKEN" | railway login
+          echo "Using Railway Token for authentication"
 
       - name: Create Database in Railway
         env:
